@@ -1,0 +1,101 @@
+version: '3.5'
+services:
+
+  mysql:
+    image: mariadb
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    container_name: mariadb
+    hostname: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: db_wordpress
+      MYSQL_USER: user_wp
+      MYSQL_PASSWORD: password
+    restart: always
+
+  mysqld-exporter:
+    image: quay.io/prometheus/mysqld-exporter
+    container_name: mysqld-exporter
+    hostname: mysql-exporter
+    restart: always
+    command:
+     - "--mysqld.username=root:password"
+     - "--mysqld.address=mysql:3306"
+    ports: 
+      - 9104:9104
+
+  wordpress:
+    image: wordpress:php7.4-fpm-alpine
+    volumes:
+      - ./data/html:/var/www/html
+    container_name: wordpress
+    depends_on:
+      - mysql
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      MYSQL_ROOT_PASSWORD: password
+      WORDPRESS_DB_NAME: db_wordpress
+      WORDPRESS_DB_USER: user_wp
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_TABLE_PREFIX: wp_
+    links:
+      - mysql
+    restart: always
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./data/html:/var/www/html
+    container_name: nginx
+    restart: always
+    ports:
+      - 8080:80
+    links:
+      - wordpress
+
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter
+    container_name: nginx-exporter
+    hostname: nginx-exporter
+    depends_on:
+      - nginx
+    ports:
+     - 9113
+    command:
+      - --nginx.scrape-uri
+      - http://127.0.0.1:8080/nginx_status
+    restart: always
+
+  pma:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    restart: always
+    links:
+      - mysql:mysql
+    ports:
+      - 8081:80
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+
+  node-exporter:
+    image: prom/node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    container_name: node-exporter
+    command:
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --collector.filesystem.ignored-mount-points
+      - ^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)
+    ports:
+      - 9100:9100
+    restart: always
+
+networks:
+  default:
+    external:
+      name: monitoring
