@@ -1,5 +1,5 @@
 # obsrevabilty_edu
-Развернул систему в контейнерах в два стека:
+Развернул систему в контейнерах с помощь docker в два стека:
 - Объект мониторинга CMS wordpress с phpma, бд mysql и экспортерами (nginx, mysql, node)
 - Систему мониторинга Prometheus с BlackBox
-Объединил в одну сеть -monitoring
+Прокинул в одну сеть -monitoring
