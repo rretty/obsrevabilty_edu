@@ -35,7 +35,7 @@ scrape_configs:
     static_configs:
       - targets:
         - https://www.ya.ru
-        - http:/172.17.0.1:8080/
+        - http://172.17.0.1:8080/
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
