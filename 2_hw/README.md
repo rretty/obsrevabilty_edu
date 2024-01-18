@@ -1,4 +1,4 @@
-Добавил контейнер victoriametrics для сбора метрики с прометеуса с глубиной храни:
+Добавил контейнер victoriametrics для сбора метрики с прометеуса с глубиной хранения в 2 недели:
 
   victoriametrics:
     image: victoriametrics/victoria-metrics
@@ -25,7 +25,6 @@
 
 + добавил для скрейпа метрик виктории 
 scrape_configs:
-
   - job_name: victoriametrics
     static_configs:
       - targets: ['victoriametrics:8428']
