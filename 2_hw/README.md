@@ -1,6 +1,6 @@
 Добавил контейнер victoriametrics для сбора метрики с прометеуса с глубиной хранения в 2 недели:
-    victoriametrics:
     
+    victoriametrics:    
     image: victoriametrics/victoria-metrics
     container_name: victoriametrics
     hostname: victoriametrics
@@ -23,13 +23,14 @@
 
 с ограничением в 10к эксземпляров (с запасом по советам из документации)
 
-+ добавил для скрейпа метрик виктории 
-scrape_configs:
-  - job_name: victoriametrics
-    static_configs:
-      - targets: ['victoriametrics:8428']
+добавил для скрейпа метрик виктории:
+  
+    scrape_configs:
+          - job_name: victoriametrics
+      static_configs:
+          - targets: ['victoriametrics:8428']
 
-+ довил новый лейбл для маркировки метрик прометеуса в виктории
+добавил новый лейбл для маркировки метрик прометеуса в виктории:
 
-external_labels:
-    site: prod
+    external_labels:
+        site: prod
