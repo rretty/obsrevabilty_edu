@@ -1,6 +1,6 @@
 Добавил контейнер victoriametrics для сбора метрики с прометеуса с глубиной хранения в 2 недели:
-
-  victoriametrics:
+    victoriametrics:
+    
     image: victoriametrics/victoria-metrics
     container_name: victoriametrics
     hostname: victoriametrics
