@@ -1,5 +1,4 @@
-Дополнительно добавил два контейнера 
-алертменеджер 
+Дополнительно добавил контейнер алертменеджера
 
     alertmanager:
     image: prom/alertmanager:latest
@@ -14,26 +13,6 @@
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
       - '--storage.path=/etc/alertmanager/data'
-
-и контейнер интеграции с телеграмом (с контретным адресом контейнера алертменеджера, и токеном телеграм-бота):
-
-    alertmanager-bot
-    image: metalmatze/alertmanager-bot:0.4.3
-    container_name: alertmanager-bot
-    hostname: alertmanager-bot
-    command:
-      - --alertmanager.url=http://172.22.0.7:9093
-      - --log.level=info
-      - --store=bolt
-      - --bolt.path=/data/bot.db
-      - --telegram.admin=*******
-      - --telegram.token=********
-    user: root
-    ports:
-      - 9095:9095
-    restart: always
-    volumes:
-      - ./telegram/data:/data
 
 добавил в конфиг прометеуса таргет алертменеджера и конфиг правил алертов
     
