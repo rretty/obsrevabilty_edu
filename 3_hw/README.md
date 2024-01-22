@@ -55,7 +55,6 @@
 с сортировкой по важности и группы триггеров
   
     route:
-    receiver: 'mail'
     repeat_interval: 1h
     group_by: ['alertname', 'severity', 'groups']
 
