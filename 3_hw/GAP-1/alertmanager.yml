@@ -1,0 +1,44 @@
+route:
+
+  repeat_interval: 5m
+  group_by: ['alertname', 'severity', 'group']
+  group_wait: 30s
+  group_interval: 5m
+  receiver: 'default'
+
+  routes:
+    - match:
+        group: 'BlackBox'
+        severity: 'warning'
+      receiver: 'blackbox_warn'
+
+    - match:
+        group: 'BlackBox'
+        severity: 'critical'
+      receiver: 'blackbox_crit'
+
+    - match:
+      receiver: 'default'
+
+
+receivers:
+
+  - name: 'default'
+
+  - name: 'blackbox_warn'
+    telegram_configs:
+    - bot_token: 'TOKEN'
+      api_url: 'https://api.telegram.org'
+      chat_id: -CHATID
+
+  - name: 'blackbox_crit'
+    telegram_configs:
+    - bot_token: 'TOKEN'
+      api_url: 'https://api.telegram.org'
+      chat_id: -CHATID
+
+    - name: 'targets'
+      telegram_configs:
+      - bot_token: 'TOKEN'
+        api_url: 'https://api.telegram.org'
+        chat_id: -CHATID
